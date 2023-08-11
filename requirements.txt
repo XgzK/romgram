@@ -1,0 +1,7 @@
+# Pyrogram
+pyrogram~=2.0.106
+tgcrypto
+
+aiohttp~=3.8.5
+certifi~=2023.7.22
+ujson
