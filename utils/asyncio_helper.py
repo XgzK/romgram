@@ -163,3 +163,22 @@ async def send_message(token, chat_id, text):
     method_name = 'sendMessage'
     params = {'chat_id': str(chat_id), 'text': text}
     return await _process_request(token, method_name, params=params)
+
+
+async def send_messages(token, chat_ids, text):
+    """
+    发送多个
+    :param token:
+    :type token:
+    :param chat_ids:
+    :type chat_ids:
+    :param text:
+    :type text:
+    :return:
+    :rtype:
+    """
+    method_name = 'sendMessage'
+    for chat_id in chat_ids:
+        params = {'chat_id': str(chat_id), 'text': text}
+        await _process_request(token, method_name, params=params)
+    return

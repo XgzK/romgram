@@ -29,13 +29,15 @@ async def text_cha_id(message: Message) -> bool:
     :return:
     :rtype:
     """
+    if message.forward_from_chat:
+        return bool(message.forward_from_chat.id in conf.shield)
     return bool(message.chat.id in conf.shield)
 
 
 async def text_filter_url(_, __, message: Message):
     if await text_cha_id(message):
         return False
-    if re.findall(r'(https://[\w\-.]+(?:isv|jd).*?\.com/[a-zA-Z0-9&?=_/-].*)', await text_caption(message)):
+    if re.findall(r'(https://(?:[\w\-.]+isv.*?\.com|pro\.m\.jd\.com)+/[a-zA-Z0-9&?\.=_/-]*)', await text_caption(message)):
         return True
     return False
 

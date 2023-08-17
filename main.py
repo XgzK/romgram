@@ -5,7 +5,7 @@ from pyrogram import Client
 
 import conf
 from utils.filter import text_url, text_url_token, text_export, text_caption
-from utils.asyncio_helper import send_message
+from utils.asyncio_helper import send_messages
 
 app = Client("anan", api_id=conf.api_id, api_hash=conf.api_hash)
 
@@ -22,17 +22,14 @@ async def token(client, message):
 
 @app.on_message(text_url)
 async def url(client, message):
-    text1 = await text_caption(message)
-    url1 = re.findall(r'(https://[\w\-.]+(?:isv|jd).*?\.com/[a-zA-Z0-9&?=_/-].*)', text1)
-    await send_message(token=conf.tokens, chat_id=conf.chat_id,
-                       text=("\n" + join(url1) + f"\n{message.chat.id} {message.chat.title} url"))
+    url1 = re.findall(r'(https://(?:[\w\-.]+isv.*?\.com|pro\.m\.jd\.com)+/[a-zA-Z0-9&?\.=_/-]*)', await text_caption(message))
+    await send_messages(token=conf.tokens, chat_ids=conf.chat_ids,
+                        text= "\n".join(set(url1)))
 
 
 @app.on_message(text_export)
 async def export(client, message):
-    text1 = f"\n{message.chat.id} {message.chat.title} export\n"
-    text1 += await text_caption(message)
-    await send_message(token=conf.tokens, chat_id=conf.chat_id, text=text1)
+    await send_messages(token=conf.tokens, chat_ids=conf.chat_ids, text=await text_caption(message))
 
 
 # @app.on_message()
